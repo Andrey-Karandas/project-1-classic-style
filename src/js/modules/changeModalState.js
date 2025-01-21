@@ -12,7 +12,7 @@ const changeModalState = (state) => {
   function bindActionToElements(event, elem, prop) {
     elem.forEach((item, index) => {
       item.addEventListener(event, () => {
-        switch (item.className) {
+        switch (item.classList[0]) {
           case 'balcon_icons_img':
             state[prop] = index
             break
