@@ -3,8 +3,10 @@ import modals from './modules/modals'
 import tabs from './modules/tabs'
 import form from './modules/forms'
 import changeModalState from './modules/changeModalState'
+import timer from './modules/timer'
 
 window.addEventListener('DOMContentLoaded', () => {
+  timer('2025-02-22')
   let modalState = {
     form: 0
   }
