@@ -29,8 +29,6 @@ const changeModalState = (state) => {
             item.checked = true
             break
         }
-        console.log(state);
-
       })
     })
   }

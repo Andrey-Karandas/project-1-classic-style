@@ -1818,3 +1818,16 @@ textarea:focus {
     animation: none !important;
   }
 }
+
+.faded {
+  animation: faded 1s;
+}
+
+@keyframes faded{
+from{
+  opacity: 0;
+}
+to{
+  opacity: 1;
+}
+}
