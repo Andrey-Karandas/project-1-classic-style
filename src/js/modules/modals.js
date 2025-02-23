@@ -1,70 +1,59 @@
 const modals = (state) => {
 
-  function checkProps(keys = []) {
-    let props = []
-    for (let key of keys) {
-      if (!state.hasOwnProperty(key) || state[key] === '') {
-        props.push(key)
-      }
-    }
-    return props
-  }
-
-  function showModal(modals, currentModal) {
-    modals.forEach((item) => item.style.display = 'none')
-    currentModal.style.display = 'block'
-    document.body.classList.add('modal-open')
-  }
-
-  function bindModal(triggerSelector, modalSelector, closeSelector, closeOverlay = true) {
-    const trigger = document.querySelectorAll(triggerSelector)
+  function bindModal(triggersSelector, modalSelector, closeSelector, closeOverlay = true, validation = false, props = []) {
+    const triggers = document.querySelectorAll(triggersSelector)
     const modal = document.querySelector(modalSelector)
     const close = document.querySelector(closeSelector)
     const allModal = document.querySelectorAll('[data-modal]')
     const widthScroll = calcScroll()
 
-    trigger.forEach((item) => {
+    triggers.forEach((item) => {
       item.addEventListener('click', (e) => {
         e.preventDefault()
 
-        if (item.classList.contains('popup_calc_button')) {
-          const infoError = document.querySelector('.balcon-error');
-          ['form', '#width', '#height'].forEach(item => {
-            item === 'form' ? infoError.textContent = '' : document.querySelector(item).style.border = '1px solid #ccc';
-          })
-          const props = checkProps(['form', 'width', 'height'])
-          props.forEach(prop => {
-            if (prop === 'form') {
-              infoError.textContent = '*Выберете форму балкона'
-              infoError.style.color = 'red'
-            } else {
-              document.querySelector(`#${prop}`).style.border = '1px solid red'
+        if (validation) {
+          const statusMessage = item.previousElementSibling
+          statusMessage.innerHTML = ''
+
+          const message = {
+            form: '*Выберете форму балкона',
+            width: '*Укажите ширину',
+            height: '*Укажите высоту',
+            type: '*Выбирете остекление',
+            profile: '*Выберите холодное или теплое',
+          }
+
+          const missingProps = props.filter(item => !state.hasOwnProperty(item) || state[item] === '')
+
+          missingProps.forEach(prop => {
+            switch (prop) {
+              case 'form': statusMessage.insertAdjacentHTML('beforeend', `<p>${message.form}</p>`)
+                break;
+              case 'width': statusMessage.insertAdjacentHTML('beforeend', `<p>${message.width}</p>`);
+                break;
+              case 'height': statusMessage.insertAdjacentHTML('beforeend', `<p>${message.height}</p>`);
+                break;
+              case 'type': statusMessage.insertAdjacentHTML('beforeend', `<p>${message.type}</p>`)
+                break;
+              case 'profile': statusMessage.insertAdjacentHTML('beforeend', `<p>${message.profile}</p>`)
+                break;
             }
 
           })
-          if (props.length === 0) {
+
+          if (missingProps.length === 0) {
             document.body.style.marginRight = `${widthScroll}px`
-            showModal(allModal, modal)
+            allModal.forEach((item) => item.style.display = 'none')
+            modal.style.display = 'block'
+            document.body.classList.add('modal-open')
           }
 
-        } else if (item.classList.contains('popup_calc_profile_button')) {
-          const props = checkProps(['type', 'profile']).map(prop => {
-            return `<div style="color:red">${prop === 'type' ? "*Выбирете остекление" : "*Выберите холодное или теплое"}</div>`
-          })
-
-          document.querySelector('.info').innerHTML = props.join('')
-
-          if (props.length === 0) {
-            document.body.style.marginRight = `${widthScroll}px`
-            showModal(allModal, modal)
-          }
-        }
-
-        if (!item.classList.contains('popup_calc_button') && !item.classList.contains('popup_calc_profile_button')) {
+        } else {
           document.body.style.marginRight = `${widthScroll}px`
-          showModal(allModal, modal)
+          allModal.forEach((item) => item.style.display = 'none')
+          modal.style.display = 'block'
+          document.body.classList.add('modal-open')
         }
-
       })
     })
 
@@ -99,9 +88,9 @@ const modals = (state) => {
   bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close')
   bindModal('.phone_link', '.popup', '.popup .popup_close')
   bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close', false)
-  bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false)
-  bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false)
-  showModalByTime('.popup', 60000)
+  bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false, true, ['form', 'width', 'height'])
+  bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false, true, ['type', 'profile'])
+  // showModalByTime('.popup', 60000)
 }
 
 export default modals

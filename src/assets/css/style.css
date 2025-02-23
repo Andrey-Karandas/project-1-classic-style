@@ -29,6 +29,10 @@ textarea:focus {
   outline: none;
 }
 
+.status-message {
+  color:red;
+}
+
 .no-padding {
   padding: 0 !important;
 }
