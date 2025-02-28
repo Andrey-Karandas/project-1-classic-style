@@ -17764,6 +17764,23 @@ window.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
+/***/ "./src/js/modules/calcScroll.js":
+/*!**************************************!*\
+  !*** ./src/js/modules/calcScroll.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var calcScroll = function calcScroll() {
+  return window.innerWidth - document.documentElement.clientWidth;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (calcScroll);
+
+/***/ }),
+
 /***/ "./src/js/modules/changeModalState.js":
 /*!********************************************!*\
   !*** ./src/js/modules/changeModalState.js ***!
@@ -17977,26 +17994,35 @@ var form = function form(state) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _calcScroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calcScroll */ "./src/js/modules/calcScroll.js");
+
+
 var images = function images() {
-  var imgPopup = document.createElement('div');
-  var bigImg = document.createElement('img');
+  var popup = document.createElement('div');
   var workSection = document.querySelector('.works');
-  imgPopup.classList.add('popup');
-  workSection.appendChild(imgPopup);
-  imgPopup.appendChild(bigImg);
+  var img = document.createElement('img');
+  var widthScroll = Object(_calcScroll__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  workSection.appendChild(popup);
+  popup.appendChild(img);
+  popup.classList.add('popup');
+  popup.style.cssText = "\n    alignt-items: center;\n    justify-content: center;\n    padding: 15px;\n    ";
   workSection.addEventListener('click', function (e) {
     e.preventDefault();
     var target = e.target;
 
     if (target.classList.contains('preview')) {
+      popup.style.display = 'flex';
       var path = target.parentNode.getAttribute('href');
-      bigImg.setAttribute('src', path);
-      imgPopup.style.cssText = "\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        padding: 0px 10px;\n      ";
-      bigImg.style.maxWidth = '100%';
+      img.setAttribute('src', path);
+      img.style.maxWidth = '100%';
+      document.body.classList.add('modal-open');
+      document.body.style.marginRight = "".concat(widthScroll, "px");
     }
 
     if (target.matches('div.popup')) {
-      imgPopup.style.display = 'none';
+      popup.style.display = 'none';
+      document.body.classList.remove('modal-open');
+      document.body.style.marginRight = "0px";
     }
   });
 };
@@ -18018,6 +18044,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_array_filter__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_filter__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
 /* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _calcScroll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./calcScroll */ "./src/js/modules/calcScroll.js");
+
 
 
 
@@ -18030,7 +18058,7 @@ var modals = function modals(state) {
     var modal = document.querySelector(modalSelector);
     var close = document.querySelector(closeSelector);
     var allModal = document.querySelectorAll('[data-modal]');
-    var widthScroll = calcScroll();
+    var widthScroll = Object(_calcScroll__WEBPACK_IMPORTED_MODULE_2__["default"])();
     triggers.forEach(function (item) {
       item.addEventListener('click', function (e) {
         e.preventDefault();
@@ -18115,10 +18143,6 @@ var modals = function modals(state) {
       document.querySelector(modalSelector).style.display = 'block';
       document.body.classList.add('modal-open');
     }, time);
-  }
-
-  function calcScroll() {
-    return window.innerWidth - document.documentElement.clientWidth;
   }
 
   bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');

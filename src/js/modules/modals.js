@@ -1,3 +1,4 @@
+import calcScroll from "./calcScroll"
 const modals = (state) => {
 
   function bindModal(triggersSelector, modalSelector, closeSelector, closeOverlay = true, validation = false, props = []) {
@@ -81,9 +82,6 @@ const modals = (state) => {
     }, time)
   }
 
-  function calcScroll() {
-    return window.innerWidth - document.documentElement.clientWidth
-  }
 
   bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close')
   bindModal('.phone_link', '.popup', '.popup .popup_close')
